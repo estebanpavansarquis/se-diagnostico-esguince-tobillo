@@ -1,7 +1,13 @@
 target/
 local/
 
-# Eclipse, Netbeans and IntelliJ files
+# Eclipse Core      
+.project
+
+# JDT-specific (Eclipse Java Development Tools)     
+.classpath
+
+# Other files
 .*
 !.gitignore
 !.github
