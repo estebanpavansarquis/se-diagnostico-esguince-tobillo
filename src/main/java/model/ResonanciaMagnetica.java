@@ -32,7 +32,6 @@ public class ResonanciaMagnetica {
 		return desgarroDeNervios;
 	}
 
-
 	public void setDesgarroDeNervios(DesgarroDeNervios desgarroDeNervios) {
 		this.desgarroDeNervios = desgarroDeNervios;
 	}

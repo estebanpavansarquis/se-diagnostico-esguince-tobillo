@@ -17,6 +17,7 @@ import org.kie.api.runtime.KieSession;
 import org.kie.api.runtime.rule.FactHandle;
 
 import model.*;
+import model.enums.*;
 import utils.KnowledgeSessionHelper;
 
 public class ForwardTestCases {
@@ -56,24 +57,196 @@ public class ForwardTestCases {
 		print();
 	}
 	
-
+	
 	@Test
-	public void diagnósticoCondicionesExternasNoAplicanTest() {
-		print("Caso de prueba 1: Diagnóstico condiciones externas No Aplican");
+	public void diagnósticoSinEsguince01() {
+		print("Caso de prueba 1: Diagnóstico de esguince sin esguince 1");
 
 		Paciente paciente = new Paciente();
-		Lesion lesion = new Lesion();
-		
-		paciente.setLesion(lesion);
-	
-		print(paciente);
 		
 		sessionStatefull.insert(paciente);
 		sessionStatefull.fireAllRules();
 		
-		DiagnosticoEsguince diagnosticoEsguince = paciente.getDiagnosticoEsguince();
-		assertResults(diagnosticoEsguince, "Sin_Esguince");
+		DiagnosticoEsguince diagnosticoEsguinceObtenido = paciente.getDiagnosticoEsguince();
+		
+		DiagnosticoEsguince diagnosticoEsguinceEsperado = new DiagnosticoEsguince();
+		diagnosticoEsguinceEsperado.setGradoDeEsguince(GradoDeEsguince.Sin_Esguince);
+		
+		assertResults(diagnosticoEsguinceObtenido, diagnosticoEsguinceEsperado);
 	}
+	
+	@Test
+	public void diagnósticoEsguinceLeve01() {
+		print("Caso de prueba 2: Diagnóstico de esguince de grado Leve 1");
+
+		Paciente paciente = new Paciente();
+		paciente.intensidadDeDolor = IntensidadDeDolor.Leve;
+		paciente.tobillo.setPresentaHinchazon(PresentaHinchazon.Leve);
+		paciente.resosnanciaMagnetica.setExtensionDeLesion(ExtensionDeLesion.Leve);
+		
+		sessionStatefull.insert(paciente);
+		sessionStatefull.fireAllRules();
+		
+
+		DiagnosticoEsguince diagnosticoEsguinceObtenido = paciente.getDiagnosticoEsguince();
+		
+		DiagnosticoEsguince diagnosticoEsguinceEsperado = new DiagnosticoEsguince();
+		diagnosticoEsguinceEsperado.setGradoDeEsguince(GradoDeEsguince.Leve);
+		diagnosticoEsguinceEsperado.setTratarConPRICE(true);
+		diagnosticoEsguinceEsperado.setTratarConMedicacion(true);
+		diagnosticoEsguinceEsperado.setDiasDeReposo(15);
+		
+		assertResults(diagnosticoEsguinceObtenido, diagnosticoEsguinceEsperado);
+	}
+	
+	@Test
+	public void diagnósticoEsguinceMedio01() {
+		print("Caso de prueba 3: Diagnóstico de esguince de grado Medio 1");
+
+		Paciente paciente = new Paciente();
+		paciente.intensidadDeDolor = IntensidadDeDolor.Intenso;
+		paciente.resosnanciaMagnetica.setExtensionDeLesion(ExtensionDeLesion.Extensa);
+		paciente.resosnanciaMagnetica.setDesgarroDeNervios(DesgarroDeNervios.Parcial);
+		paciente.tobillo.setPresentaHinchazon(PresentaHinchazon.Alta);
+		paciente.tobillo.setCapacidadDeMovimiento(CapacidadDeMovimiento.Limitada);
+		
+		sessionStatefull.insert(paciente);
+		sessionStatefull.fireAllRules();
+		
+		DiagnosticoEsguince diagnosticoEsguinceObtenido = paciente.getDiagnosticoEsguince();
+		
+		DiagnosticoEsguince diagnosticoEsguinceEsperado = new DiagnosticoEsguince();
+		diagnosticoEsguinceEsperado.setGradoDeEsguince(GradoDeEsguince.Medio);
+		diagnosticoEsguinceEsperado.setTratarConPRICE(true);
+		diagnosticoEsguinceEsperado.setTratarConMedicacion(true);
+		diagnosticoEsguinceEsperado.setTratarConInmovilizacion(true);
+		diagnosticoEsguinceEsperado.setTratarConFisioterapia(true);
+		diagnosticoEsguinceEsperado.setNecesitaProximaSitaDeControl(true);
+		diagnosticoEsguinceEsperado.setDiasDeReposo(30);
+		
+		assertResults(diagnosticoEsguinceObtenido, diagnosticoEsguinceEsperado);
+	}
+	
+	@Test
+	public void diagnósticoEsguinceGrave01() {
+		print("Caso de prueba 4: Diagnóstico de esguince de grado Grave 1");
+
+		Paciente paciente = new Paciente();
+		paciente.intensidadDeDolor = IntensidadDeDolor.Intenso;
+		paciente.resosnanciaMagnetica.setExtensionDeLesion(ExtensionDeLesion.Extensa);
+		paciente.resosnanciaMagnetica.setDesgarroDeNervios(DesgarroDeNervios.Parcial);
+		paciente.tobillo.setSoportaSuPropioPeso(false);
+		paciente.tobillo.setPresentaHinchazon(PresentaHinchazon.Alta);
+		paciente.tobillo.setCapacidadDeMovimiento(CapacidadDeMovimiento.Nula);
+		
+		sessionStatefull.insert(paciente);
+		sessionStatefull.fireAllRules();
+		
+		DiagnosticoEsguince diagnosticoEsguinceObtenido = paciente.getDiagnosticoEsguince();
+		
+		DiagnosticoEsguince diagnosticoEsguinceEsperado = new DiagnosticoEsguince();
+		diagnosticoEsguinceEsperado.setGradoDeEsguince(GradoDeEsguince.Grave);
+		diagnosticoEsguinceEsperado.setTratarConPRICE(true);
+		diagnosticoEsguinceEsperado.setTratarConMedicacion(true);
+		diagnosticoEsguinceEsperado.setTratarConInmovilizacion(true);
+		diagnosticoEsguinceEsperado.setTratarConFisioterapia(true);
+		diagnosticoEsguinceEsperado.setNecesitaProximaSitaDeControl(true);
+		diagnosticoEsguinceEsperado.setDiasDeReposo(45);
+		
+		assertResults(diagnosticoEsguinceObtenido, diagnosticoEsguinceEsperado);
+	}
+	
+	@Test
+	public void diagnósticoEsguinceGrave02() {
+		print("Caso de prueba 5: Diagnóstico de esguince de grado Grave 2");
+
+		Paciente paciente = new Paciente();
+		paciente.intensidadDeDolor = IntensidadDeDolor.Intenso;
+		paciente.radiografia.setPresentaLesionOsea(true);
+		paciente.resosnanciaMagnetica.setExtensionDeLesion(ExtensionDeLesion.Extensa);
+		paciente.resosnanciaMagnetica.setDesgarroDeNervios(DesgarroDeNervios.Parcial);
+		paciente.tobillo.setSoportaSuPropioPeso(false);
+		paciente.tobillo.setPresentaHinchazon(PresentaHinchazon.Alta);
+		paciente.tobillo.setCapacidadDeMovimiento(CapacidadDeMovimiento.Nula);
+		
+		sessionStatefull.insert(paciente);
+		sessionStatefull.fireAllRules();
+		
+		DiagnosticoEsguince diagnosticoEsguinceObtenido = paciente.getDiagnosticoEsguince();
+		
+		DiagnosticoEsguince diagnosticoEsguinceEsperado = new DiagnosticoEsguince();
+		diagnosticoEsguinceEsperado.setGradoDeEsguince(GradoDeEsguince.Grave);
+		diagnosticoEsguinceEsperado.setTratarConPRICE(true);
+		diagnosticoEsguinceEsperado.setTratarConMedicacion(true);
+		diagnosticoEsguinceEsperado.setTratarConInmovilizacion(true);
+		diagnosticoEsguinceEsperado.setTratarConFisioterapia(true);
+		diagnosticoEsguinceEsperado.setNecesitaProximaSitaDeControl(true);
+		diagnosticoEsguinceEsperado.setDiasDeReposo(60);
+		
+		assertResults(diagnosticoEsguinceObtenido, diagnosticoEsguinceEsperado);
+	}
+	
+	@Test
+	public void diagnósticoEsguinceGrave03() {
+		print("Caso de prueba 6: Diagnóstico de esguince de grado Grave 3");
+
+		Paciente paciente = new Paciente();
+		paciente.intensidadDeDolor = IntensidadDeDolor.Intenso;
+		paciente.radiografia.setPresentaFractura(true);
+		paciente.resosnanciaMagnetica.setExtensionDeLesion(ExtensionDeLesion.Extensa);
+		paciente.resosnanciaMagnetica.setDesgarroDeNervios(DesgarroDeNervios.Nulo);
+		paciente.tobillo.setSoportaSuPropioPeso(false);
+		paciente.tobillo.setPresentaHinchazon(PresentaHinchazon.Alta);
+		paciente.tobillo.setCapacidadDeMovimiento(CapacidadDeMovimiento.Nula);
+		
+		sessionStatefull.insert(paciente);
+		sessionStatefull.fireAllRules();
+		
+		DiagnosticoEsguince diagnosticoEsguinceObtenido = paciente.getDiagnosticoEsguince();
+		
+		DiagnosticoEsguince diagnosticoEsguinceEsperado = new DiagnosticoEsguince();
+		diagnosticoEsguinceEsperado.setGradoDeEsguince(GradoDeEsguince.Grave);
+		diagnosticoEsguinceEsperado.setTratarConPRICE(true);
+		diagnosticoEsguinceEsperado.setTratarConMedicacion(true);
+		diagnosticoEsguinceEsperado.setTratarConInmovilizacion(true);
+		diagnosticoEsguinceEsperado.setTratarConFisioterapia(true);
+		diagnosticoEsguinceEsperado.setNecesitaProximaSitaDeControl(true);
+		diagnosticoEsguinceEsperado.setDiasDeReposo(75);
+		
+		assertResults(diagnosticoEsguinceObtenido, diagnosticoEsguinceEsperado);
+	}
+	
+	@Test
+	public void diagnósticoEsguinceGrave04() {
+		print("Caso de prueba 7: Diagnóstico de esguince de grado Grave 4");
+
+		Paciente paciente = new Paciente();
+		paciente.intensidadDeDolor = IntensidadDeDolor.Intenso;
+		paciente.radiografia.setPresentaFractura(true);
+		paciente.resosnanciaMagnetica.setExtensionDeLesion(ExtensionDeLesion.Extensa);
+		paciente.resosnanciaMagnetica.setDesgarroDeNervios(DesgarroDeNervios.Total);
+		paciente.tobillo.setSoportaSuPropioPeso(false);
+		paciente.tobillo.setPresentaHinchazon(PresentaHinchazon.Alta);
+		paciente.tobillo.setCapacidadDeMovimiento(CapacidadDeMovimiento.Nula);
+		
+		sessionStatefull.insert(paciente);
+		sessionStatefull.fireAllRules();
+		
+		DiagnosticoEsguince diagnosticoEsguinceObtenido = paciente.getDiagnosticoEsguince();
+		
+		DiagnosticoEsguince diagnosticoEsguinceEsperado = new DiagnosticoEsguince();
+		diagnosticoEsguinceEsperado.setGradoDeEsguince(GradoDeEsguince.Grave);
+		diagnosticoEsguinceEsperado.setTratarConPRICE(true);
+		diagnosticoEsguinceEsperado.setTratarConMedicacion(true);
+		diagnosticoEsguinceEsperado.setTratarConInmovilizacion(true);
+		diagnosticoEsguinceEsperado.setTratarConFisioterapia(true);
+		diagnosticoEsguinceEsperado.setNecesitaProximaSitaDeControl(true);
+		diagnosticoEsguinceEsperado.setTratarConCirugia(true);
+		diagnosticoEsguinceEsperado.setDiasDeReposo(90);
+		
+		assertResults(diagnosticoEsguinceObtenido, diagnosticoEsguinceEsperado);
+	}
+	
 
 	private RuleRuntimeEventListener buildEventListener() {
 		return new RuleRuntimeEventListener() {

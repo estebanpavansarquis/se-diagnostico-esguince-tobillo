@@ -1,6 +1,6 @@
 package model;
 
-import model.enums.Grado;
+import model.enums.GradoDeEsguince;
 
 public class DiagnosticoEsguince {
 	
@@ -12,11 +12,11 @@ public class DiagnosticoEsguince {
 	int diasDeReposo;
 	Boolean necesitaProximaSitaDeControl;
 	
-	Grado grado;
+	GradoDeEsguince gradoDeEsguince;
 	
 	public DiagnosticoEsguince(Boolean tratarConPRICE, Boolean tratarConMedicacion, Boolean tratarConInmovilizacion,
 			Boolean tratarConFisioterapia, Boolean tratarConCirugia, int diasDeReposo,
-			Boolean necesitaProximaSitaDeControl, Grado grado) {
+			Boolean necesitaProximaSitaDeControl, GradoDeEsguince gradoDeEsguince) {
 		this.tratarConPRICE = tratarConPRICE;
 		this.tratarConMedicacion = tratarConMedicacion;
 		this.tratarConInmovilizacion = tratarConInmovilizacion;
@@ -24,7 +24,7 @@ public class DiagnosticoEsguince {
 		this.tratarConCirugia = tratarConCirugia;
 		this.diasDeReposo = diasDeReposo;
 		this.necesitaProximaSitaDeControl = necesitaProximaSitaDeControl;
-		this.grado = grado;
+		this.gradoDeEsguince = gradoDeEsguince;
 	}
 	
 	public DiagnosticoEsguince() {
@@ -35,23 +35,83 @@ public class DiagnosticoEsguince {
 		this.tratarConCirugia = false;
 		this.diasDeReposo = 0;
 		this.necesitaProximaSitaDeControl = false;
-		this.grado = Grado.Sin_Esguince;
+		this.gradoDeEsguince = GradoDeEsguince.Sin_Diagnostico;
 	}
 	
 	@Override
 	public String toString() {
-		return  "Tratar con PRICE: " 			+ this.tratarConPRICE + "\n" +
-				"Tratar con Medicacion: " 		+ this.tratarConMedicacion + "\n" +
-				"Tratar con Inmovilizacion: " 	+ this.tratarConInmovilizacion + "\n" +
-				"Tratar con Fisioterapia: " 	+ this.tratarConFisioterapia + "\n" +
-				"Tratar con Cirugia: " 			+ this.tratarConCirugia + "\n" +
-				"Dias de reposo: " 				+ this.diasDeReposo + "\n" +
-				"Grado: "				 		+ this.grado + "\n" +
-				"Presenta lesion osea: " 		+ this.necesitaProximaSitaDeControl + "\n";
+		return  "Grado de Esguince: "					+ this.gradoDeEsguince + "\n" +
+				"Dias de reposo: " 						+ this.diasDeReposo + "\n" +
+				"Necesita Proxima Sita De Control: " 	+ this.necesitaProximaSitaDeControl + "\n" +
+				"Tratar con PRICE: " 					+ this.tratarConPRICE + "\n" +
+				"Tratar con Medicacion: " 				+ this.tratarConMedicacion + "\n" +
+				"Tratar con Inmovilizacion: " 			+ this.tratarConInmovilizacion + "\n" +
+				"Tratar con Fisioterapia: " 			+ this.tratarConFisioterapia + "\n" +
+				"Tratar con Cirugia: " 					+ this.tratarConCirugia;
 	}
 	
-	public Grado getDiagnosticoEsguince() {
-		return grado;
+
+	
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + diasDeReposo;
+		result = prime * result + ((gradoDeEsguince == null) ? 0 : gradoDeEsguince.hashCode());
+		result = prime * result
+				+ ((necesitaProximaSitaDeControl == null) ? 0 : necesitaProximaSitaDeControl.hashCode());
+		result = prime * result + ((tratarConCirugia == null) ? 0 : tratarConCirugia.hashCode());
+		result = prime * result + ((tratarConFisioterapia == null) ? 0 : tratarConFisioterapia.hashCode());
+		result = prime * result + ((tratarConInmovilizacion == null) ? 0 : tratarConInmovilizacion.hashCode());
+		result = prime * result + ((tratarConMedicacion == null) ? 0 : tratarConMedicacion.hashCode());
+		result = prime * result + ((tratarConPRICE == null) ? 0 : tratarConPRICE.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		DiagnosticoEsguince other = (DiagnosticoEsguince) obj;
+		if (diasDeReposo != other.diasDeReposo)
+			return false;
+		if (gradoDeEsguince != other.gradoDeEsguince)
+			return false;
+		if (necesitaProximaSitaDeControl == null) {
+			if (other.necesitaProximaSitaDeControl != null)
+				return false;
+		} else if (!necesitaProximaSitaDeControl.equals(other.necesitaProximaSitaDeControl))
+			return false;
+		if (tratarConCirugia == null) {
+			if (other.tratarConCirugia != null)
+				return false;
+		} else if (!tratarConCirugia.equals(other.tratarConCirugia))
+			return false;
+		if (tratarConFisioterapia == null) {
+			if (other.tratarConFisioterapia != null)
+				return false;
+		} else if (!tratarConFisioterapia.equals(other.tratarConFisioterapia))
+			return false;
+		if (tratarConInmovilizacion == null) {
+			if (other.tratarConInmovilizacion != null)
+				return false;
+		} else if (!tratarConInmovilizacion.equals(other.tratarConInmovilizacion))
+			return false;
+		if (tratarConMedicacion == null) {
+			if (other.tratarConMedicacion != null)
+				return false;
+		} else if (!tratarConMedicacion.equals(other.tratarConMedicacion))
+			return false;
+		if (tratarConPRICE == null) {
+			if (other.tratarConPRICE != null)
+				return false;
+		} else if (!tratarConPRICE.equals(other.tratarConPRICE))
+			return false;
+		return true;
 	}
 
 	public Boolean getTratarConPRICE() {
@@ -110,12 +170,29 @@ public class DiagnosticoEsguince {
 		this.necesitaProximaSitaDeControl = necesitaProximaSitaDeControl;
 	}
 
-	public Grado getGrado() {
-		return grado;
+	public GradoDeEsguince getGradoDeEsguince() {
+		return gradoDeEsguince;
 	}
 
-	public void setGrado(Grado grado) {
-		this.grado = grado;
+	public void setGradoDeEsguince(GradoDeEsguince gradoDeEsguince) {
+		this.gradoDeEsguince = gradoDeEsguince;
 	}
+	
+	public void setGradoDeEsguinceSinEsguince() {
+		this.gradoDeEsguince = GradoDeEsguince.Sin_Esguince;
+	}
+	
+	public void setGradoDeEsguinceLeve() {
+		this.gradoDeEsguince = GradoDeEsguince.Leve;
+	}
+	
+	public void setGradoDeEsguinceMedio() {
+		this.gradoDeEsguince = GradoDeEsguince.Medio;
+	}
+	
+	public void setGradoDeEsguinceGrave() {
+		this.gradoDeEsguince = GradoDeEsguince.Grave;
+	}
+	
 
 }

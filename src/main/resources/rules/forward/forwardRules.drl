@@ -1,173 +1,207 @@
-//created on: 10 nov. 2020
 package forwardRules
 
 
 //list any import classes here.
 import model.*;
+import model.enums.*;
 
 //declare any global variables here
 
-
 rule "R01 Diagnóstico condiciones externas No Aplican"
     when
-    	$paciente: Paciente()
+    	$paciente: Paciente(
+    		diagnosticoCondicionesExternas == null
+    	)
+    	
     	$lesion: Lesion(
+    		condicionesAmbientales == false, 
         	condicionFatiga == false,
-        	condicionEquipoInadecuado == false,
-        	condicionesAmbientales == false  
+        	condicionEquipoInadecuado == false
         )from $paciente.lesion
+        
     then
     	modify($paciente) {
-    		diagnosticoCondicionesExternas.setDiagnosticoCondicionesExternas(false)
+    		setDiagnosticoCondicionesExternas(false);
     	}
 end
 
 
 rule "R02 Diagnóstico condiciones externas Aplican Condiciones Ambientales"
     when
-    	$paciente: Paciente()
+    	$paciente: Paciente(
+    		diagnosticoCondicionesExternas == null
+    	)
+    	
     	$lesion: Lesion(
         	condicionesAmbientales == true  
         )from $paciente.lesion
+               
     then
     	modify($paciente) {
-    		diagnosticoCondicionesExternas.setDiagnosticoCondicionesExternas(true)
+    		setDiagnosticoCondicionesExternas(true)
     	}
 end
 
 rule "R03 Diagnóstico condiciones externas Aplican Condiciones Fatiga"
     when
-    	$paciente: Paciente()
+    	$paciente: Paciente(
+    		diagnosticoCondicionesExternas == null
+    	)
+    	
     	$lesion: Lesion(
         	condicionFatiga == true  
         )from $paciente.lesion
+        
     then
     	modify($paciente) {
-    		diagnosticoCondicionesExternas.setDiagnosticoCondicionesExternas(true)
+    		setDiagnosticoCondicionesExternas(true)
     	}
 end
 
 rule "R04 Diagnóstico condiciones externas Aplican Condiciones Equipo Inadecuado"
     when
-    	$paciente: Paciente()
+    	$paciente: Paciente(
+    		diagnosticoCondicionesExternas == null
+    	)
+    	
     	$lesion: Lesion(
         	condicionEquipoInadecuado == true  
         )from $paciente.lesion
+        
     then
     	modify($paciente) {
-    		diagnosticoCondicionesExternas.setDiagnosticoCondicionesExternas(true)
+    		setDiagnosticoCondicionesExternas(true)
     	}
 end
 
 rule "R05 Diagnóstico Pop Negativo"
     when
-    	$paciente: Paciente()
+    	$paciente: Paciente(
+    		diagnosticoPop == null
+    	)
+    	
     	$lesion: Lesion(
         	escucharPop == false,   
         	sentirPop == false   
         )from $paciente.lesion
+
     then
     	modify($paciente) {
-    		diagnosticoPop.setPop(false)
+    		setDiagnosticoPop(false)
     	}
 end
 
 rule "R06 Diagnóstico Pop Positivo Siente"
     when
-    	$paciente: Paciente()
+    	$paciente: Paciente(
+    		diagnosticoPop == null
+    	)
+    	
     	$lesion: Lesion(
         	escucharPop == true      
         )from $paciente.lesion
+        
     then
     	modify($paciente) {
-    		diagnosticoPop.setPop(true)
+    		setDiagnosticoPop(true)
     	}
 end
 
 rule "R7 Diagnóstico Pop Positivo Escucha"
     when
-    	$paciente: Paciente()
+    	$paciente: Paciente(
+    		diagnosticoPop == null
+    	)
+    	
     	$lesion: Lesion(
         	sentirPop == true      
         )from $paciente.lesion
+        
     then
     	modify($paciente) {
-    		diagnosticoPop.setPop(true)
+    		setDiagnosticoPop(true)
     	}
 end
 
 rule "R8 Diagnóstico Exploracion Fisica No necesita Resonancia Magnetica"
     when
     	$paciente: Paciente(
-    		intensidadDeDolor == "Nulo"
+    		intensidadDeDolor.isa(IntensidadDeDolor.Nulo)
     	)
+    	
     	$diagnosticoCondicionesExternas: DiagnosticoCondicionesExternas(
     		aplicanCondicionesExternas == false
     	)from $paciente.diagnosticoCondicionesExternas
+    	
     	$diagnosticoPop: DiagnosticoPop(
     		pop == false
     	)from $paciente.diagnosticoPop
+    	
     	$tobillo: Tobillo(
     		presentaHematomas == false,
-    		presentaHinchazon  == "Nula",
+    		presentaHinchazon.isa(PresentaHinchazon.Nula),
 			soportaSuPropioPeso  == true,
-			capacidadDeMovimiento == "Total"
+			capacidadDeMovimiento.isa(CapacidadDeMovimiento.Total)
 		)from $paciente.tobillo
+		
     then
     	modify($paciente) {
-    		diagnosticoExploracionFisica.setNecesitaResonanciaMagnetica(false);
+    		setNecesitaResonanciaMagnetica(false),
+    		setDesgarroDeNerviosDiagnosticoResonancia(DesgarroDeNervios.Nulo),
+    		setExtensionDeLesionDiagnosticoResonancia(ExtensionDeLesion.Nula);
     	}
 end
+
+
 
 rule "R9 Diagnóstico Exploracion Fisica necesita Resonancia Magnetica 01"
     when
     	$paciente: Paciente(
-    		intensidadDeDolor == "Leve"
+    		intensidadDeDolor.isa(IntensidadDeDolor.Leve)
     	)
+    	
     	$diagnosticoPop: DiagnosticoPop(
     		pop == true
     	)from $paciente.diagnosticoPop
+    	
     then
     	modify($paciente) {
-    		diagnosticoExploracionFisica.setNecesitaResonanciaMagnetica(true);
+    		setNecesitaResonanciaMagnetica(true);
     	}
 end
 
 rule "R10 Diagnóstico Exploracion Fisica necesita Resonancia Magnetica 02"
     when
     	$paciente: Paciente(
-    		intensidadDeDolor == "Intenso"
+    		intensidadDeDolor.isa(IntensidadDeDolor.Intenso)
     	)
     then
     	modify($paciente) {
-    		diagnosticoExploracionFisica.setNecesitaResonanciaMagnetica(true);
+    		setNecesitaResonanciaMagnetica(true);
     	}
 end
 
-
 rule "R11 Diagnóstico Exploracion Fisica necesita Resonancia Magnetica 03"
     when
-    	$paciente: Paciente(
-    	)
+    	$paciente: Paciente()
     	$tobillo: Tobillo(
     		presentaHematomas == true
 		)from $paciente.tobillo
     then
     	modify($paciente) {
-    		diagnosticoExploracionFisica.setNecesitaResonanciaMagnetica(true);
+    		setNecesitaResonanciaMagnetica(true);
     	}
 end
 
 rule "R12 Diagnóstico Exploracion Fisica necesita Resonancia Magnetica 04"
     when
-    	$paciente: Paciente(
-    	)
+    	$paciente: Paciente()
     	$tobillo: Tobillo(
-    		presentaHinchazon  == "Leve" && presentaHinchazon  == "Alta"
+    		presentaHinchazon.isa(PresentaHinchazon.Leve) || presentaHinchazon.isa(PresentaHinchazon.Alta)
 		)from $paciente.tobillo
     then
     	modify($paciente) {
-    		diagnosticoExploracionFisica.setNecesitaResonanciaMagnetica(true);
+    		setNecesitaResonanciaMagnetica(true);
     	}
 end
 
@@ -180,7 +214,7 @@ rule "R13 Diagnóstico Exploracion Fisica necesita Resonancia Magnetica 05"
 		)from $paciente.tobillo
     then
     	modify($paciente) {
-    		diagnosticoExploracionFisica.setNecesitaResonanciaMagnetica(true);
+    		setNecesitaResonanciaMagnetica(true);
     	}
 end
 
@@ -189,50 +223,57 @@ rule "R14 Diagnóstico Exploracion Fisica necesita Resonancia Magnetica 06"
     	$paciente: Paciente(
     	)
     	$tobillo: Tobillo(
-    		capacidadDeMovimiento == "Nula" && capacidadDeMovimiento == "Limitada"
+    		capacidadDeMovimiento.isa(CapacidadDeMovimiento.Nula) || capacidadDeMovimiento.isa(CapacidadDeMovimiento.Limitada)
 		)from $paciente.tobillo
     then
     	modify($paciente) {
-    		diagnosticoExploracionFisica.setNecesitaResonanciaMagnetica(true);
+    		setNecesitaResonanciaMagnetica(true);
     	}
 end
 
 rule "R15 Diagnóstico Exploracion Fisica necesita Resonancia Magnetica 07"
     when
     	$paciente: Paciente(
-    		antecedentes == "Influyentes"
+    		antecedentesInfluyentes == true,
+    		intensidadDeDolor.isa(IntensidadDeDolor.Leve) || intensidadDeDolor.isa(IntensidadDeDolor.Intenso)
     	)
+    	
     	$tobillo: Tobillo(
-    		capacidadDeMovimiento == "Nula" && capacidadDeMovimiento == "Limitada"
+    		capacidadDeMovimiento.isa(CapacidadDeMovimiento.Nula) || capacidadDeMovimiento.isa(CapacidadDeMovimiento.Limitada)
 		)from $paciente.tobillo
+		
+		$lesion: Lesion(
+    		diasTranscurridosDeLaLesion >= 42
+		)from $paciente.lesion
+		
     then
     	modify($paciente) {
-    		diagnosticoExploracionFisica.setNecesitaResonanciaMagnetica(true);
+    		setNecesitaResonanciaMagnetica(true);
     	}
 end
 
 rule "R16 Diagnóstico Exploracion Fisica necesita Radiongrafia 01"
     when
     	$paciente: Paciente(
-    		intensidadDeDolor == "Leve" && intensidadDeDolor == "Intenso"
+    		intensidadDeDolor.isa(IntensidadDeDolor.Leve) || intensidadDeDolor.isa(IntensidadDeDolor.Intenso)
     	)
     	$tobillo: Tobillo(
     		presentaEspasmosMusculares == true
 		)from $paciente.tobillo
     then
     	modify($paciente) {
-    		diagnosticoExploracionFisica.setNecesitaResonanciaMagnetica(true);
+    		setNecesitaRadiografia(true);
     	}
 end
 
 rule "R17 Diagnóstico Exploracion Fisica necesita Radiongrafia 02"
-    when
+	when
     	$paciente: Paciente(
-    		intensidadDeDolor == "Intenso"
+    		intensidadDeDolor.isa(IntensidadDeDolor.Intenso)
     	)
     then
     	modify($paciente) {
-    		diagnosticoExploracionFisica.setNecesitaResonanciaMagnetica(true);
+    		setNecesitaRadiografia(true);
     	}
 end
 
@@ -244,7 +285,7 @@ rule "R18 Diagnóstico Exploracion Fisica necesita Radiongrafia 03"
 		)from $paciente.tobillo
     then
     	modify($paciente) {
-    		diagnosticoExploracionFisica.setNecesitaResonanciaMagnetica(true);
+    		setNecesitaRadiografia(true);
     	}
 end
 
@@ -252,49 +293,445 @@ rule "R19 Diagnóstico Exploracion Fisica necesita Radiongrafia 04"
     when
     	$paciente: Paciente()
     	$tobillo: Tobillo(
-    		capacidadDeMovimiento == "Nula"
+    		capacidadDeMovimiento.isa(CapacidadDeMovimiento.Nula)
 		)from $paciente.tobillo
     then
     	modify($paciente) {
-    		diagnosticoExploracionFisica.setNecesitaResonanciaMagnetica(true);
+    		setNecesitaRadiografia(true);
     	}
 end
 
-rule "R20 Diagnóstico Exploracion Fisica no necesita Radiongrafia"
+rule "R20 Diagnóstico Exploracion Fisica no necesita Radiografia"
     when
     	$paciente: Paciente(
-    		intensidadDeDolor == "Leve" && intensidadDeDolor == "Nulo"
+    		intensidadDeDolor.isa(IntensidadDeDolor.Leve) || intensidadDeDolor.isa(IntensidadDeDolor.Nulo)
     	)
     	$tobillo: Tobillo(
-    		capacidadDeMovimiento == "Total",
     		soportaSuPropioPeso == true,
+    		capacidadDeMovimiento.isa(CapacidadDeMovimiento.Total),
     		presentaEspasmosMusculares == false	
 		)from $paciente.tobillo
     then
     	modify($paciente) {
-    		diagnosticoExploracionFisica.setNecesitaResonanciaMagnetica(false);
+    		setNecesitaRadiografia(false),
+    		setFracturaDiagnosticoRadiografía(false),
+			setLesionOseaDiagnosticoRadiografía(false);
     	}
 end
 
-/*
-rule "R20 Diagnóstico Radiografia Ok"
+rule "R21 Diagnostico Radiografia OK"
+	when
+		$paciente: Paciente()
+		
+		$diagnosticoExploracionFisica: DiagnosticoExploracionFisica(
+    		necesitaRadiografia == true
+    	)from $paciente.diagnosticoExploracionFisica
+		
+		$radiografia: Radiografia(
+			presentaFractura == false,
+			presentaLesionOsea == false
+		)from $paciente.radiografia
+	then
+		modify($paciente){
+			setFracturaDiagnosticoRadiografía(false),
+			setLesionOseaDiagnosticoRadiografía(false);
+		}
+end	
+
+rule "R22 Diagnóstico Radiografia Presenta fractura"
     when
     	$paciente: Paciente()
+    	
+    	$diagnosticoExploracionFisica: DiagnosticoExploracionFisica(
+    		necesitaRadiografia == true
+    	)from $paciente.diagnosticoExploracionFisica
+    	
     	$radiografia: Radiografia(
-    		presentaFractura  == false,
-    		presentaLesionOsea  == false
+    		presentaFractura  == true
+		)from $paciente.radiografia
+		
+    then
+    	modify($paciente) {
+    		setFracturaDiagnosticoRadiografía(true);
+    	}
+end
+
+rule "R23 Diagnóstico Radiografia Presenta Lesion Osea"
+    when
+    	$paciente: Paciente()
+    	
+    	$diagnosticoExploracionFisica: DiagnosticoExploracionFisica(
+    		necesitaRadiografia == true
+    	)from $paciente.diagnosticoExploracionFisica
+    	
+    	$radiografia: Radiografia(
+    		presentaLesionOsea  == true
 		)from $paciente.radiografia
     then
     	modify($paciente) {
-    		diagnosticoRadiografia.setPresentaFractura(false);
-    		diagnosticoRadiografia.setPresentaLesionOsea(false);
+    		setLesionOseaDiagnosticoRadiografía(true);
     	}
 end
-*/
 
+rule "R24 Diagnóstico Resonancia Magnética sin Desgarro de nervios"
+    when
+    	$paciente: Paciente()
+    	
+    	$resonanciaMagnetica: ResonanciaMagnetica(
+    		desgarroDeNervios.isa(DesgarroDeNervios.Nulo)
+		)from $paciente.resonanciaMagnetica
+    then
+    	modify($paciente) {
+    		setDesgarroDeNerviosDiagnosticoResonancia(DesgarroDeNervios.Nulo);
+    	}
+end
 
+rule "R25 Diagnóstico Resonancia Magnética Desgarro de nervios parcial"
+    when
+    	$paciente: Paciente()
+    	
+    	$diagnosticoExploracionFisica: DiagnosticoExploracionFisica(
+    		necesitaResonanciaMagnetica == true
+    	)from $paciente.diagnosticoExploracionFisica
+    	
+    	$resonanciaMagnetica: ResonanciaMagnetica(
+    		desgarroDeNervios.isa(DesgarroDeNervios.Parcial)
+		)from $paciente.resonanciaMagnetica
+    then
+    	modify($paciente) {
+    		setDesgarroDeNerviosDiagnosticoResonancia(DesgarroDeNervios.Parcial);
+    	}
+end
 
+rule "R26 Diagnóstico Resonancia Magnética Desgarro de nervios Total"
+    when
+    	$paciente: Paciente()
+    	
+    	$diagnosticoExploracionFisica: DiagnosticoExploracionFisica(
+    		necesitaResonanciaMagnetica == true
+    	)from $paciente.diagnosticoExploracionFisica
+    	
+    	$resonanciaMagnetica: ResonanciaMagnetica(
+    		desgarroDeNervios.isa(DesgarroDeNervios.Total)
+		)from $paciente.resonanciaMagnetica
+    then
+    	modify($paciente) {
+    		setDesgarroDeNerviosDiagnosticoResonancia(DesgarroDeNervios.Total);
+    	}
+end
 
+rule "R27 Diagnóstico Resonancia Magnética Extension de Lesion Nula"
+    when
+    	$paciente: Paciente()
+    	
+    	$resonanciaMagnetica: ResonanciaMagnetica(
+    		extensionDeLesion.isa(ExtensionDeLesion.Nula)
+		)from $paciente.resonanciaMagnetica
+    then
+    	modify($paciente) {
+    		setExtensionDeLesionDiagnosticoResonancia(ExtensionDeLesion.Nula);
+    	}
+end
 
+rule "R28 Diagnóstico Resonancia Magnética Extension de Lesion Leve"
+    when
+    	$paciente: Paciente()
+    	
+    	$diagnosticoExploracionFisica: DiagnosticoExploracionFisica(
+    		necesitaResonanciaMagnetica == true
+    	)from $paciente.diagnosticoExploracionFisica
+    	
+    	$resonanciaMagnetica: ResonanciaMagnetica(
+    		extensionDeLesion.isa(ExtensionDeLesion.Leve)
+		)from $paciente.resonanciaMagnetica
+    then
+    	modify($paciente) {
+    		setExtensionDeLesionDiagnosticoResonancia(ExtensionDeLesion.Leve);
+    	}
+end
+
+rule "R29 Diagnóstico Resonancia Magnética Extension de Lesion Extensa"
+    when
+    	$paciente: Paciente()
+    	
+    	$diagnosticoExploracionFisica: DiagnosticoExploracionFisica(
+    		necesitaResonanciaMagnetica == true
+    	)from $paciente.diagnosticoExploracionFisica
+    	
+    	$resonanciaMagnetica: ResonanciaMagnetica(
+    		extensionDeLesion.isa(ExtensionDeLesion.Extensa)
+		)from $paciente.resonanciaMagnetica
+    then
+    	modify($paciente) {
+    		setExtensionDeLesionDiagnosticoResonancia(ExtensionDeLesion.Extensa);
+    	}
+end
+
+rule "R30 Diagnostico de esguince Sin esguince"
+	when
+		$paciente: Paciente(
+			intensidadDeDolor.isa(IntensidadDeDolor.Nulo)
+		)
+		
+		$diagnosticoRadiografia: DiagnosticoRadiografia(
+		    presentaFractura  == false,
+    		presentaLesionOsea  == false
+    	)from $paciente.diagnosticoRadiografia
+    	
+    	$diagnosticoResonancia: DiagnosticoResonancia(
+    		extensionDeLesion.isa(ExtensionDeLesion.Nula),
+    		desgarroDeNervios.isa(DesgarroDeNervios.Nulo)
+		)from $paciente.diagnosticoResonancia
+		
+		$tobillo: Tobillo(
+    		presentaHinchazon.isa(PresentaHinchazon.Nula),
+			soportaSuPropioPeso  == true,
+			capacidadDeMovimiento.isa(CapacidadDeMovimiento.Total)
+		)from $paciente.tobillo	
+		
+		$diagnosticoEsguince: DiagnosticoEsguince(
+			gradoDeEsguince.isa(GradoDeEsguince.Sin_Diagnostico)
+		)from $paciente.diagnosticoEsguince		
+			
+	then
+    	modify($paciente) {
+    		diagnosticoEsguince.setGradoDeEsguinceSinEsguince(),
+    		diagnosticoEsguince.setTratarConPRICE(false),
+    		diagnosticoEsguince.setTratarConMedicacion(false),
+    		diagnosticoEsguince.setTratarConInmovilizacion(false),
+    		diagnosticoEsguince.setTratarConFisioterapia(false),
+    		diagnosticoEsguince.setTratarConCirugia(false),
+    		diagnosticoEsguince.setDiasDeReposo(0),
+    		diagnosticoEsguince.setNecesitaProximaSitaDeControl(false);
+    	}
+end
+
+rule "R31 Diagnostico de esguince Leve"
+	when
+		$paciente: Paciente(
+			intensidadDeDolor.isa(IntensidadDeDolor.Leve)
+		)
+		
+		$diagnosticoRadiografia: DiagnosticoRadiografia(
+		    presentaFractura  == false,
+    		presentaLesionOsea  == false
+    	)from $paciente.diagnosticoRadiografia
+    	
+    	$diagnosticoResonancia: DiagnosticoResonancia(
+    		extensionDeLesion.isa(ExtensionDeLesion.Leve),
+    		desgarroDeNervios.isa(DesgarroDeNervios.Nulo)
+		)from $paciente.diagnosticoResonancia
+		
+		$tobillo: Tobillo(
+			soportaSuPropioPeso  == true,
+    		presentaHinchazon.isa(PresentaHinchazon.Leve) || presentaHinchazon.isa(PresentaHinchazon.Alta),
+			capacidadDeMovimiento.isa(CapacidadDeMovimiento.Total) || capacidadDeMovimiento.isa(CapacidadDeMovimiento.Limitada) 
+		)from $paciente.tobillo		
+		
+		$diagnosticoEsguince: DiagnosticoEsguince(
+			gradoDeEsguince.isa(GradoDeEsguince.Sin_Diagnostico)
+		)from $paciente.diagnosticoEsguince
+		
+	then
+    	modify($paciente) {
+    		diagnosticoEsguince.setGradoDeEsguinceLeve(),
+    		diagnosticoEsguince.setTratarConPRICE(true),
+    		diagnosticoEsguince.setTratarConMedicacion(true),
+    		diagnosticoEsguince.setTratarConInmovilizacion(false),
+    		diagnosticoEsguince.setTratarConFisioterapia(false),
+    		diagnosticoEsguince.setTratarConCirugia(false),
+    		diagnosticoEsguince.setDiasDeReposo(15),
+    		diagnosticoEsguince.setNecesitaProximaSitaDeControl(false);
+    	}
+end
+
+rule "R32 Diagnostico de esguince Moderado"
+	when
+		$paciente: Paciente(
+			intensidadDeDolor.isa(IntensidadDeDolor.Intenso) || intensidadDeDolor.isa(IntensidadDeDolor.Leve)
+		)
+		
+		$diagnosticoRadiografia: DiagnosticoRadiografia(
+		    presentaFractura  == false,
+    		presentaLesionOsea  == false
+    	)from $paciente.diagnosticoRadiografia
+    	
+    	$diagnosticoResonancia: DiagnosticoResonancia(
+    		extensionDeLesion.isa(ExtensionDeLesion.Leve) || extensionDeLesion.isa(ExtensionDeLesion.Extensa),
+    		desgarroDeNervios.isa(DesgarroDeNervios.Parcial)
+		)from $paciente.diagnosticoResonancia
+		
+		$tobillo: Tobillo(
+			soportaSuPropioPeso  == true,
+    		presentaHinchazon.isa(PresentaHinchazon.Leve) || presentaHinchazon.isa(PresentaHinchazon.Alta),
+			capacidadDeMovimiento.isa(CapacidadDeMovimiento.Limitada)
+		)from $paciente.tobillo		
+		
+		$diagnosticoEsguince: DiagnosticoEsguince(
+			gradoDeEsguince.isa(GradoDeEsguince.Sin_Diagnostico)
+		)from $paciente.diagnosticoEsguince
+		
+	then
+    	modify($paciente) {
+    		diagnosticoEsguince.setGradoDeEsguinceMedio(),
+    		diagnosticoEsguince.setTratarConPRICE(true),
+    		diagnosticoEsguince.setTratarConMedicacion(true),
+    		diagnosticoEsguince.setTratarConInmovilizacion(true),
+    		diagnosticoEsguince.setTratarConFisioterapia(true),
+    		diagnosticoEsguince.setTratarConCirugia(false),
+    		diagnosticoEsguince.setDiasDeReposo(30),
+    		diagnosticoEsguince.setNecesitaProximaSitaDeControl(true);
+    	}
+end
+
+rule "R33 Diagnostico de esguince Grave 01"
+	when
+		$paciente: Paciente(
+			intensidadDeDolor.isa(IntensidadDeDolor.Intenso)
+		)
+		
+		$diagnosticoRadiografia: DiagnosticoRadiografia(
+		    presentaFractura  == false,
+    		presentaLesionOsea  == false
+    	)from $paciente.diagnosticoRadiografia
+    	
+    	$diagnosticoResonancia: DiagnosticoResonancia(
+    		extensionDeLesion.isa(ExtensionDeLesion.Extensa),
+    		desgarroDeNervios.isa(DesgarroDeNervios.Parcial)
+		)from $paciente.diagnosticoResonancia
+		
+		$tobillo: Tobillo(
+			soportaSuPropioPeso  == false,
+    		presentaHinchazon.isa(PresentaHinchazon.Leve)|| presentaHinchazon.isa(PresentaHinchazon.Alta),
+			capacidadDeMovimiento.isa(CapacidadDeMovimiento.Limitada) || capacidadDeMovimiento.isa(CapacidadDeMovimiento.Nula)
+		)from $paciente.tobillo		
+		
+		$diagnosticoEsguince: DiagnosticoEsguince(
+			gradoDeEsguince.isa(GradoDeEsguince.Sin_Diagnostico)
+		)from $paciente.diagnosticoEsguince
+		
+	then
+    	modify($paciente) {
+    		diagnosticoEsguince.setGradoDeEsguinceGrave(),
+    		diagnosticoEsguince.setTratarConPRICE(true),
+    		diagnosticoEsguince.setTratarConMedicacion(true),
+    		diagnosticoEsguince.setTratarConInmovilizacion(true),
+    		diagnosticoEsguince.setTratarConFisioterapia(true),
+    		diagnosticoEsguince.setTratarConCirugia(false),
+    		diagnosticoEsguince.setDiasDeReposo(45),
+    		diagnosticoEsguince.setNecesitaProximaSitaDeControl(true);
+    	}
+end
+
+rule "R34 Diagnostico de esguince Grave 02"
+	when
+		$paciente: Paciente(
+			intensidadDeDolor.isa(IntensidadDeDolor.Intenso)
+		)
+		
+		$diagnosticoRadiografia: DiagnosticoRadiografia(
+		    presentaFractura  == false,
+    		presentaLesionOsea  == true
+    	)from $paciente.diagnosticoRadiografia
+    	
+    	$diagnosticoResonancia: DiagnosticoResonancia(
+    		extensionDeLesion.isa(ExtensionDeLesion.Extensa),
+    		desgarroDeNervios.isa(DesgarroDeNervios.Parcial)
+		)from $paciente.diagnosticoResonancia
+		
+		$tobillo: Tobillo(
+			soportaSuPropioPeso  == false,
+    		presentaHinchazon.isa(PresentaHinchazon.Leve)|| presentaHinchazon.isa(PresentaHinchazon.Alta),
+			capacidadDeMovimiento.isa(CapacidadDeMovimiento.Limitada) || capacidadDeMovimiento.isa(CapacidadDeMovimiento.Nula)
+		)from $paciente.tobillo
+		
+		$diagnosticoEsguince: DiagnosticoEsguince(
+			gradoDeEsguince.isa(GradoDeEsguince.Sin_Diagnostico)
+		)from $paciente.diagnosticoEsguince
+				
+	then
+    	modify($paciente) {
+    		diagnosticoEsguince.setGradoDeEsguinceGrave(),
+    		diagnosticoEsguince.setTratarConPRICE(true),
+    		diagnosticoEsguince.setTratarConMedicacion(true),
+    		diagnosticoEsguince.setTratarConInmovilizacion(true),
+    		diagnosticoEsguince.setTratarConFisioterapia(true),
+    		diagnosticoEsguince.setTratarConCirugia(false),
+    		diagnosticoEsguince.setDiasDeReposo(60),
+    		diagnosticoEsguince.setNecesitaProximaSitaDeControl(true);
+    	}
+end
+
+rule "R35 Diagnostico de esguince Grave 03"
+	when
+		$paciente: Paciente(
+			intensidadDeDolor.isa(IntensidadDeDolor.Intenso)
+		)
+		
+		$diagnosticoRadiografia: DiagnosticoRadiografia(
+		    presentaFractura  == true
+    	)from $paciente.diagnosticoRadiografia
+    	
+    	$diagnosticoResonancia: DiagnosticoResonancia(
+    		extensionDeLesion.isa(ExtensionDeLesion.Extensa),
+    		desgarroDeNervios.isa(DesgarroDeNervios.Parcial) || desgarroDeNervios.isa(DesgarroDeNervios.Nulo)
+		)from $paciente.diagnosticoResonancia
+		
+		$tobillo: Tobillo(
+			soportaSuPropioPeso  == false,
+    		presentaHinchazon.isa(PresentaHinchazon.Leve) || presentaHinchazon.isa(PresentaHinchazon.Alta),
+			capacidadDeMovimiento.isa(CapacidadDeMovimiento.Limitada) || capacidadDeMovimiento.isa(CapacidadDeMovimiento.Nula)
+		)from $paciente.tobillo	
+		
+		$diagnosticoEsguince: DiagnosticoEsguince(
+			gradoDeEsguince.isa(GradoDeEsguince.Sin_Diagnostico)
+		)from $paciente.diagnosticoEsguince
+			
+	then
+    	modify($paciente) {
+    		diagnosticoEsguince.setGradoDeEsguinceGrave(),
+    		diagnosticoEsguince.setTratarConPRICE(true),
+    		diagnosticoEsguince.setTratarConMedicacion(true),
+    		diagnosticoEsguince.setTratarConInmovilizacion(true),
+    		diagnosticoEsguince.setTratarConFisioterapia(true),
+    		diagnosticoEsguince.setTratarConCirugia(false),
+    		diagnosticoEsguince.setDiasDeReposo(75),
+    		diagnosticoEsguince.setNecesitaProximaSitaDeControl(true);
+    	}
+end
+
+rule "R36 Diagnostico de esguince Grave 04"
+	when
+		$paciente: Paciente(
+			intensidadDeDolor.isa(IntensidadDeDolor.Intenso)
+		)	
+    	
+    	$diagnosticoResonancia: DiagnosticoResonancia(
+    		extensionDeLesion.isa(ExtensionDeLesion.Extensa),
+    		desgarroDeNervios.isa(DesgarroDeNervios.Total)
+		)from $paciente.diagnosticoResonancia
+		
+		$tobillo: Tobillo(
+			soportaSuPropioPeso  == false,
+    		presentaHinchazon.isa(PresentaHinchazon.Leve) || presentaHinchazon.isa(PresentaHinchazon.Alta),
+			capacidadDeMovimiento.isa(CapacidadDeMovimiento.Limitada) || capacidadDeMovimiento.isa(CapacidadDeMovimiento.Nula)
+		)from $paciente.tobillo
+		
+		$diagnosticoEsguince: DiagnosticoEsguince(
+			gradoDeEsguince.isa(GradoDeEsguince.Sin_Diagnostico)
+		)from $paciente.diagnosticoEsguince
+					
+	then
+    	modify($paciente) {
+    		diagnosticoEsguince.setGradoDeEsguinceGrave(),
+    		diagnosticoEsguince.setTratarConPRICE(true),
+    		diagnosticoEsguince.setTratarConMedicacion(true),
+    		diagnosticoEsguince.setTratarConInmovilizacion(true),
+    		diagnosticoEsguince.setTratarConFisioterapia(true),
+    		diagnosticoEsguince.setTratarConCirugia(true),
+    		diagnosticoEsguince.setDiasDeReposo(90),
+    		diagnosticoEsguince.setNecesitaProximaSitaDeControl(true);
+    	}
+end
 
 

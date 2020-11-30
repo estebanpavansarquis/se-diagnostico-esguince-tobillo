@@ -1,6 +1,7 @@
 package utils;
 
 import model.*;
+import model.enums.GradoDeEsguince;
 
 public class TestCaseUtils {
 
@@ -19,18 +20,22 @@ public class TestCaseUtils {
 
 	}
 
-	public static void assertResults(DiagnosticoEsguince diagnostico, String valorEsperado) {
-		String diagnosticoFinal = diagnostico.getDiagnosticoEsguince().toString();
-		printResults(diagnosticoFinal, valorEsperado);
-		assert(diagnosticoFinal.equals(valorEsperado));
+	public static void assertResults(String result, String expected) {
+		printResults(result, expected);
+		assert(result.equals(expected));
+	}
+	
+	public static void assertResults(DiagnosticoEsguince diagnosticoObtenido, DiagnosticoEsguince diagnosticoEsperado) {
+		printResults(diagnosticoObtenido.toString(), diagnosticoEsperado.toString());
+		assert(diagnosticoObtenido.equals(diagnosticoEsperado));
 	}
 
 	private static void printResults(String result,String expected) {
 		print("Resultados");
-		print("Esperaba: " + expected);
-		print("Recibi: " + result);
+		print("\nDiagnostico esperado: " + expected);
+		print("\nDiagnostico obtenido: " + result);
 		Boolean isOk = result.equals(expected);
 		String condition = isOk ? "Ok" : "Fallo";
-		print("Caso de prueba: "+ condition);
+		print("\nCaso de prueba: "+ condition);
 	}
 }

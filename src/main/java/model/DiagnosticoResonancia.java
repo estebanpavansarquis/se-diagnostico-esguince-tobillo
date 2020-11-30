@@ -16,7 +16,7 @@ public class DiagnosticoResonancia {
 	@Override
 	public String toString() {
 		return  "Extension de lesion: " 		+ this.extensionDeLesion + "\n" +
-				"Presenta lesion osea: " 				+ this.desgarroDeNervios + "\n";
+				"Presenta lesion osea: " 		+ this.desgarroDeNervios + "\n";
 	}
 	
 	public ExtensionDeLesion getExtensionDeLesion() {
@@ -24,7 +24,7 @@ public class DiagnosticoResonancia {
 	}
 
 
-	public void setSexo(ExtensionDeLesion extensionDeLesion) {
+	public void setExtensionDeLesion(ExtensionDeLesion extensionDeLesion) {
 		this.extensionDeLesion = extensionDeLesion;
 	}
 	
@@ -32,10 +32,34 @@ public class DiagnosticoResonancia {
 		return desgarroDeNervios;
 	}
 
-
-	public void setSexo(DesgarroDeNervios desgarroDeNervios) {
+	public void setDesgarroDeNervios(DesgarroDeNervios desgarroDeNervios) {
 		this.desgarroDeNervios = desgarroDeNervios;
 	}
+	
+	public void setDesgarroDeNerviosNulo() {
+		this.desgarroDeNervios = DesgarroDeNervios.Nulo;
+	}
+	
+	public void setDesgarroDeNerviosParcial() {
+		this.desgarroDeNervios = DesgarroDeNervios.Parcial;
+	}
+	
+	public void setDesgarroDeNerviosTotal() {
+		this.desgarroDeNervios = DesgarroDeNervios.Total;
+	}
+	
+	public void setExtensionDeLesionNula() {
+		this.extensionDeLesion = ExtensionDeLesion.Nula;
+	}
+	
+	public void setExtensionDeLesionLeve() {
+		this.extensionDeLesion = ExtensionDeLesion.Leve;
+	}
+	
+	public void setExtensionDeLesionExtensa() {
+		this.extensionDeLesion = ExtensionDeLesion.Extensa;
+	}
+	
 	
 }
 

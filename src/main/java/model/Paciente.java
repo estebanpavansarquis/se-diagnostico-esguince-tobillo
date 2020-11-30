@@ -1,7 +1,7 @@
 package model;
 
-import model.enums.Antecedentes;
-import model.enums.IntensidadDeDolor;
+import model.enums.*;
+
 
 public class Paciente {
 	public Lesion lesion;
@@ -9,44 +9,46 @@ public class Paciente {
 	public ResonanciaMagnetica resosnanciaMagnetica;
 	public Tobillo tobillo;
 	public IntensidadDeDolor intensidadDeDolor;
-	public Antecedentes antecedentes;
-	
-	public DiagnosticoExploracionFisica diagnosticoExploracionFisica;
+	public Boolean antecedentesInfluyentes;
+
 	public DiagnosticoPop diagnosticoPop;
 	public DiagnosticoCondicionesExternas diagnosticoCondicionesExternas;
+	public DiagnosticoExploracionFisica diagnosticoExploracionFisica;
 	public DiagnosticoRadiografia diagnosticoRadiografia;
 	public DiagnosticoResonancia diagnosticoResonancia;
 	public DiagnosticoEsguince diagnosticoEsguince;
-	
-	
-	public Paciente(Lesion lesion, Radiografia radiografia, ResonanciaMagnetica resosnanciaMagnetica, Tobillo tobillo){
+
+	public Paciente(IntensidadDeDolor intensidadDeDolor, Boolean antecedentesInfluyentes, Lesion lesion,
+			Radiografia radiografia, ResonanciaMagnetica resosnanciaMagnetica, Tobillo tobillo) {
 		this.lesion = lesion;
 		this.radiografia = radiografia;
 		this.resosnanciaMagnetica = resosnanciaMagnetica;
 		this.tobillo = tobillo;
-		this.intensidadDeDolor = IntensidadDeDolor.Nulo;
-		this.antecedentes = Antecedentes.No_Influyentes;
-		this.diagnosticoExploracionFisica = new DiagnosticoExploracionFisica();
-		this.diagnosticoPop = new DiagnosticoPop();
-		this.diagnosticoCondicionesExternas = new DiagnosticoCondicionesExternas();
-		this.diagnosticoEsguince = new DiagnosticoEsguince();
+		this.intensidadDeDolor = intensidadDeDolor;
+		this.antecedentesInfluyentes = antecedentesInfluyentes;
+		this.diagnosticoExploracionFisica = null;
+		this.diagnosticoPop = null;
+		this.diagnosticoCondicionesExternas = null;
+		this.diagnosticoRadiografia = null;
+		this.diagnosticoResonancia = null;
+		this.diagnosticoEsguince = null;
 	}
-	
-	public Paciente(){
+
+	public Paciente() {
 		this.lesion = new Lesion();
 		this.radiografia = new Radiografia();
 		this.resosnanciaMagnetica = new ResonanciaMagnetica();
 		this.tobillo = new Tobillo();
 		this.intensidadDeDolor = IntensidadDeDolor.Nulo;
-		this.antecedentes = Antecedentes.No_Influyentes;
-		this.diagnosticoRadiografia = new DiagnosticoRadiografia();
-		this.diagnosticoResonancia = new DiagnosticoResonancia();
-		this.diagnosticoExploracionFisica = new DiagnosticoExploracionFisica();
-		this.diagnosticoPop = new DiagnosticoPop();
-		this.diagnosticoCondicionesExternas = new DiagnosticoCondicionesExternas();
+		this.antecedentesInfluyentes = false;
+		this.diagnosticoRadiografia = null;
+		this.diagnosticoResonancia = null;
+		this.diagnosticoExploracionFisica = null;
+		this.diagnosticoPop = null ;
+		this.diagnosticoCondicionesExternas = null;
 		this.diagnosticoEsguince = new DiagnosticoEsguince();
 	}
-	
+
 	public IntensidadDeDolor getIntensidadDeDolor() {
 		return intensidadDeDolor;
 	}
@@ -54,16 +56,15 @@ public class Paciente {
 	public void setIntensidadDeDolor(IntensidadDeDolor intensidadDeDolor) {
 		this.intensidadDeDolor = intensidadDeDolor;
 	}
-	
-	public Antecedentes getAntecedentes() {
-		return antecedentes;
+
+	public Boolean getAntecedentesInfluyentes() {
+		return antecedentesInfluyentes;
 	}
 
-	public void setAntecedentes(Antecedentes antecedentes) {
-		this.antecedentes = antecedentes;
+	public void setAntecedentesInfluyentes(Boolean antecedentes) {
+		this.antecedentesInfluyentes = antecedentes;
 	}
-	
-	
+
 	public Lesion getLesion() {
 		return lesion;
 	}
@@ -71,7 +72,6 @@ public class Paciente {
 	public void setLesion(Lesion lesion) {
 		this.lesion = lesion;
 	}
-	
 
 	public Radiografia getRadiografia() {
 		return radiografia;
@@ -80,8 +80,7 @@ public class Paciente {
 	public void setRadiografia(Radiografia radiografia) {
 		this.radiografia = radiografia;
 	}
-	
-	
+
 	public ResonanciaMagnetica getResonanciaMagnetica() {
 		return resosnanciaMagnetica;
 	}
@@ -89,8 +88,7 @@ public class Paciente {
 	public void setResonanciaMagnetica(ResonanciaMagnetica resosnanciaMagnetica) {
 		this.resosnanciaMagnetica = resosnanciaMagnetica;
 	}
-	
-	
+
 	public Tobillo getTobillo() {
 		return tobillo;
 	}
@@ -98,7 +96,7 @@ public class Paciente {
 	public void setTobillo(Tobillo tobillo) {
 		this.tobillo = tobillo;
 	}
-	
+
 	public DiagnosticoEsguince getDiagnosticoEsguince() {
 		return diagnosticoEsguince;
 	}
@@ -124,28 +122,68 @@ public class Paciente {
 	}
 
 	public void setDiagnosticoPop(Boolean aplicaPop) {
-		this.diagnosticoPop.setPop(aplicaPop);
+		if (this.diagnosticoPop == null) {
+			this.diagnosticoPop = new DiagnosticoPop();
+		}
+		this.diagnosticoPop.setPop(true);
 	}
 
 	public DiagnosticoCondicionesExternas getDiagnosticoCondicionesExternas() {
+		if (this.diagnosticoCondicionesExternas == null) {
+			this.diagnosticoCondicionesExternas = new DiagnosticoCondicionesExternas();
+		}
 		return diagnosticoCondicionesExternas;
 	}
 
 	public void setDiagnosticoCondicionesExternas(Boolean aplicanCondicionesExternas) {
+		if (this.diagnosticoCondicionesExternas == null) {
+			this.diagnosticoCondicionesExternas = new DiagnosticoCondicionesExternas();
+		}
 		this.diagnosticoCondicionesExternas.setDiagnosticoCondicionesExternas(aplicanCondicionesExternas);
 	}
 
-	public void setDiagnosticoEsguince(DiagnosticoEsguince diagnosticoEsguince) {
-		this.diagnosticoEsguince = diagnosticoEsguince;
-	}
-	
 	public void setNecesitaResonanciaMagnetica(Boolean necesitaResonanciaMagnetica) {
-		this.diagnosticoExploracionFisica.setNecesitaResonanciaMagnetica(necesitaResonanciaMagnetica);;
+		if (this.diagnosticoExploracionFisica == null) {
+			this.diagnosticoExploracionFisica = new DiagnosticoExploracionFisica();
+		}
+		this.diagnosticoExploracionFisica.setNecesitaResonanciaMagnetica(necesitaResonanciaMagnetica);
 	}
 
 	public void setNecesitaRadiografia(Boolean necesitaRadiografia) {
+		if (this.diagnosticoExploracionFisica == null) {
+			this.diagnosticoExploracionFisica = new DiagnosticoExploracionFisica();
+		}
 		this.diagnosticoExploracionFisica.setNecesitaRadiografia(necesitaRadiografia);
 	}
+	
+	public void setFracturaDiagnosticoRadiografía(Boolean presentaFractura) {
+		if (this.diagnosticoRadiografia == null) {
+			this.diagnosticoRadiografia = new DiagnosticoRadiografia();
+		}
+		this.diagnosticoRadiografia.setPresentaFractura(presentaFractura);
+	}
+	
+	public void setLesionOseaDiagnosticoRadiografía(Boolean presentaLesionOsea) {
+		if (this.diagnosticoRadiografia == null) {
+			this.diagnosticoRadiografia = new DiagnosticoRadiografia();
+		}
+		this.diagnosticoRadiografia.setPresentaLesionOsea(presentaLesionOsea);
+	}
+	
+	public void setDesgarroDeNerviosDiagnosticoResonancia(DesgarroDeNervios desgarroDeNervios) {
+		if (this.diagnosticoResonancia == null) {
+			this.diagnosticoResonancia = new DiagnosticoResonancia();
+		}
+		this.diagnosticoResonancia.setDesgarroDeNervios(desgarroDeNervios);
+	}
+	
+	public void setExtensionDeLesionDiagnosticoResonancia(ExtensionDeLesion extensionDeLesion) {
+		if (this.diagnosticoResonancia == null) {
+			this.diagnosticoResonancia = new DiagnosticoResonancia();
+		}
+		this.diagnosticoResonancia.setExtensionDeLesion(extensionDeLesion);
+	}
+	
 	
 	
 }
