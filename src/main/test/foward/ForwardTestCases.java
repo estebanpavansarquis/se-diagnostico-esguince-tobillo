@@ -79,6 +79,8 @@ public class ForwardTestCases {
 		paciente.intensidadDeDolor = IntensidadDeDolor.Leve;
 		paciente.tobillo.setPresentaHinchazon(PresentaHinchazon.Leve);
 		paciente.resosnanciaMagnetica.setExtensionDeLesion(ExtensionDeLesion.Leve);
+		paciente.lesion.setCondicionesAmbientales(true);
+		paciente.lesion.setCondicionEquipoInadecuado(true);
 		
 		sessionStatefull.insert(paciente);
 		sessionStatefull.fireAllRules();
@@ -101,9 +103,13 @@ public class ForwardTestCases {
 
 		Paciente paciente = new Paciente();
 		paciente.intensidadDeDolor = IntensidadDeDolor.Intenso;
+		paciente.lesion.setCondicionesAmbientales(true);
+		paciente.lesion.setCondicionEquipoInadecuado(true);
+		paciente.lesion.setEscucharPop(true);
 		paciente.resosnanciaMagnetica.setExtensionDeLesion(ExtensionDeLesion.Extensa);
 		paciente.resosnanciaMagnetica.setDesgarroDeNervios(DesgarroDeNervios.Parcial);
 		paciente.tobillo.setPresentaHinchazon(PresentaHinchazon.Alta);
+		paciente.tobillo.setPresentaHematomas(true);
 		paciente.tobillo.setCapacidadDeMovimiento(CapacidadDeMovimiento.Limitada);
 		
 		sessionStatefull.insert(paciente);
@@ -129,11 +135,15 @@ public class ForwardTestCases {
 
 		Paciente paciente = new Paciente();
 		paciente.intensidadDeDolor = IntensidadDeDolor.Intenso;
+		paciente.lesion.setCondicionesAmbientales(true);
+		paciente.lesion.setCondicionEquipoInadecuado(true);
+		paciente.lesion.setEscucharPop(true);
 		paciente.resosnanciaMagnetica.setExtensionDeLesion(ExtensionDeLesion.Extensa);
 		paciente.resosnanciaMagnetica.setDesgarroDeNervios(DesgarroDeNervios.Parcial);
 		paciente.tobillo.setSoportaSuPropioPeso(false);
 		paciente.tobillo.setPresentaHinchazon(PresentaHinchazon.Alta);
 		paciente.tobillo.setCapacidadDeMovimiento(CapacidadDeMovimiento.Nula);
+		paciente.tobillo.setPresentaHematomas(true);
 		
 		sessionStatefull.insert(paciente);
 		sessionStatefull.fireAllRules();
@@ -158,12 +168,17 @@ public class ForwardTestCases {
 
 		Paciente paciente = new Paciente();
 		paciente.intensidadDeDolor = IntensidadDeDolor.Intenso;
+		paciente.lesion.setCondicionFatiga(true);
+		paciente.lesion.setEscucharPop(true);
+		paciente.lesion.setSentirPop(true);
 		paciente.radiografia.setPresentaLesionOsea(true);
 		paciente.resosnanciaMagnetica.setExtensionDeLesion(ExtensionDeLesion.Extensa);
 		paciente.resosnanciaMagnetica.setDesgarroDeNervios(DesgarroDeNervios.Parcial);
 		paciente.tobillo.setSoportaSuPropioPeso(false);
 		paciente.tobillo.setPresentaHinchazon(PresentaHinchazon.Alta);
 		paciente.tobillo.setCapacidadDeMovimiento(CapacidadDeMovimiento.Nula);
+		paciente.tobillo.setPresentaHematomas(true);
+		paciente.tobillo.setPresentaEspasmosMusculares(true);
 		
 		sessionStatefull.insert(paciente);
 		sessionStatefull.fireAllRules();
@@ -188,10 +203,16 @@ public class ForwardTestCases {
 
 		Paciente paciente = new Paciente();
 		paciente.intensidadDeDolor = IntensidadDeDolor.Intenso;
+		paciente.setAntecedentesInfluyentes(true);
 		paciente.radiografia.setPresentaFractura(true);
+		paciente.lesion.setCondicionFatiga(true);
+		paciente.lesion.setCondicionesAmbientales(true);
+		paciente.lesion.setEscucharPop(true);
+		paciente.lesion.setSentirPop(true);
 		paciente.resosnanciaMagnetica.setExtensionDeLesion(ExtensionDeLesion.Extensa);
 		paciente.resosnanciaMagnetica.setDesgarroDeNervios(DesgarroDeNervios.Nulo);
 		paciente.tobillo.setSoportaSuPropioPeso(false);
+		paciente.tobillo.setPresentaEspasmosMusculares(true);
 		paciente.tobillo.setPresentaHinchazon(PresentaHinchazon.Alta);
 		paciente.tobillo.setCapacidadDeMovimiento(CapacidadDeMovimiento.Nula);
 		
@@ -218,12 +239,18 @@ public class ForwardTestCases {
 
 		Paciente paciente = new Paciente();
 		paciente.intensidadDeDolor = IntensidadDeDolor.Intenso;
+		paciente.lesion.setCondicionFatiga(true);
+		paciente.lesion.setCondicionesAmbientales(true);
+		paciente.lesion.setEscucharPop(true);
+		paciente.lesion.setSentirPop(true);
 		paciente.radiografia.setPresentaFractura(true);
+		paciente.radiografia.setPresentaLesionOsea(true);
 		paciente.resosnanciaMagnetica.setExtensionDeLesion(ExtensionDeLesion.Extensa);
 		paciente.resosnanciaMagnetica.setDesgarroDeNervios(DesgarroDeNervios.Total);
 		paciente.tobillo.setSoportaSuPropioPeso(false);
 		paciente.tobillo.setPresentaHinchazon(PresentaHinchazon.Alta);
 		paciente.tobillo.setCapacidadDeMovimiento(CapacidadDeMovimiento.Nula);
+		paciente.tobillo.setPresentaHematomas(true);
 		
 		sessionStatefull.insert(paciente);
 		sessionStatefull.fireAllRules();
