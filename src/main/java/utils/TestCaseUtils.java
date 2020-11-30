@@ -1,7 +1,6 @@
 package utils;
 
 import model.*;
-import model.enums.GradoDeEsguince;
 
 public class TestCaseUtils {
 

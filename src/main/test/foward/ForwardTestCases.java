@@ -8,10 +8,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.kie.api.event.rule.ObjectDeletedEvent;
-import org.kie.api.event.rule.ObjectInsertedEvent;
-import org.kie.api.event.rule.ObjectUpdatedEvent;
-import org.kie.api.event.rule.RuleRuntimeEventListener;
 import org.kie.api.runtime.KieContainer;
 import org.kie.api.runtime.KieSession;
 import org.kie.api.runtime.rule.FactHandle;
@@ -245,26 +241,5 @@ public class ForwardTestCases {
 		diagnosticoEsguinceEsperado.setDiasDeReposo(90);
 		
 		assertResults(diagnosticoEsguinceObtenido, diagnosticoEsguinceEsperado);
-	}
-	
-
-	private RuleRuntimeEventListener buildEventListener() {
-		return new RuleRuntimeEventListener() {
-			@Override
-			public void objectUpdated(ObjectUpdatedEvent event) {
-			
-				System.out.println("Object updated \n" + event.getObject().toString());
-			}
-
-			@Override
-			public void objectInserted(ObjectInsertedEvent event) {
-				System.out.println("Object inserted \n" + event.getObject().toString());
-			}
-
-			@Override
-			public void objectDeleted(ObjectDeletedEvent event) {
-				System.out.println("Object deleted \n" + event.getOldObject().toString());
-			}
-		};
 	}
 }
