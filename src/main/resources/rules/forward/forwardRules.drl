@@ -377,6 +377,10 @@ rule "R24 Diagnóstico Resonancia Magnética sin Desgarro de nervios"
     when
     	$paciente: Paciente()
     	
+    	$diagnosticoExploracionFisica: DiagnosticoExploracionFisica(
+    		necesitaResonanciaMagnetica == true
+    	)from $paciente.diagnosticoExploracionFisica
+    	
     	$resonanciaMagnetica: ResonanciaMagnetica(
     		desgarroDeNervios.isa(DesgarroDeNervios.Nulo)
 		)from $paciente.resonanciaMagnetica
@@ -423,6 +427,10 @@ end
 rule "R27 Diagnóstico Resonancia Magnética Extension de Lesion Nula"
     when
     	$paciente: Paciente()
+    	
+    	$diagnosticoExploracionFisica: DiagnosticoExploracionFisica(
+    		necesitaResonanciaMagnetica == true
+    	)from $paciente.diagnosticoExploracionFisica
     	
     	$resonanciaMagnetica: ResonanciaMagnetica(
     		extensionDeLesion.isa(ExtensionDeLesion.Nula)

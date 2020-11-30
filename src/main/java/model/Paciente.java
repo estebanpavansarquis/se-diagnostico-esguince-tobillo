@@ -125,7 +125,7 @@ public class Paciente {
 		if (this.diagnosticoPop == null) {
 			this.diagnosticoPop = new DiagnosticoPop();
 		}
-		this.diagnosticoPop.setPop(true);
+		this.diagnosticoPop.setPop(aplicaPop);
 	}
 
 	public DiagnosticoCondicionesExternas getDiagnosticoCondicionesExternas() {
